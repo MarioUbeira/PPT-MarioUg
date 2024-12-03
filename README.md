@@ -11,3 +11,8 @@ Contorno de tarefas
 | **Contorno de tarefas** | **Observable** | **Axentes** | **Determinista** | **Episódico** | **Estático** | **Discreto** | **Coñecido** |  
 |:-----------------------:|:--------------:|:-----------:|:----------------:|:-------------:|:------------:|:------------:|:------------:|  
 | RPS                    | Parcial        | Multiaxente | Estocástico      | Episódico      | Estático      | Discreto      | Coñecido     |  
+
+Estrutura do axente
+==================  
+
+![](./img/estrutura_do_axente.png)
