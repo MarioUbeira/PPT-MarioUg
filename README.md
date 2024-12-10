@@ -1,12 +1,10 @@
-PPT-MarioUg  
-==================  
+# Pedra, Papel, Tesoiras - Mario Ubeira González
 
 Repositorio para o proxecto Pedra, Papel, Tesoiras da materia Modelos de Intelixencia Artificial.  
 
 O obxectivo de esta tarefa e crear un axente que se base nos resultados de partidas anteriores para tentar predicir o seguinte movemento do adversario e así maximizar a súa probabilidade de vitoria.  
 
-Contorna de tarefas  
-==================  
+## 1.Especificación da contorna de tarefas  
 
 | **Contorna de tarefas** | **Observable** | **Axentes** | **Determinista** | **Episódico** | **Estático** | **Discreto** | **Coñecido** |  
 |:-----------------------:|:--------------:|:-----------:|:----------------:|:-------------:|:------------:|:------------:|:------------:|  
@@ -28,8 +26,7 @@ Contorna de tarefas
 
 **Coñecido** ⮞ As regras do xogo son coñecidas polos participantes e non se modifican en ningún momento da partida.
 
-Estrutura do axente
-==================  
+## 2.Identificación do tipo de axente e estrutura 
 
 ![](./img/estrutura_do_axente.png)
 
