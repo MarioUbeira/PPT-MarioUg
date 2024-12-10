@@ -4,7 +4,7 @@ Repositorio para o proxecto Pedra, Papel, Tesoiras da materia Modelos de Intelix
 
 O obxectivo de esta tarefa e crear un axente que se base nos resultados de partidas anteriores para tentar predicir o seguinte movemento do adversario e así maximizar a súa probabilidade de vitoria.  
 
-## 1.Especificación da contorna de tarefas  
+## 1. Especificación da contorna de tarefas  
 
 | **Contorna de tarefas** | **Observable** | **Axentes** | **Determinista** | **Episódico** | **Estático** | **Discreto** | **Coñecido** |  
 |:-----------------------:|:--------------:|:-----------:|:----------------:|:-------------:|:------------:|:------------:|:------------:|  
@@ -26,7 +26,10 @@ O obxectivo de esta tarefa e crear un axente que se base nos resultados de parti
 
 **Coñecido** ⮞ As regras do xogo son coñecidas polos participantes e non se modifican en ningún momento da partida.
 
-## 2.Identificación do tipo de axente e estrutura 
+## 2. Identificación do tipo de axente e estrutura 
+
+**Axente reactivo con estado baseado en modelos**: Un axente reactivo con estado baseado en modelos é un xogador automatizado que, en lugar de simplemente reaccionar de forma instintiva ou aleatoria, lembra o que sucedeu en xogadas anteriores e utiliza esa información para mellorar as súas decisións no futuro. Este tipo de axente non necesita facer cálculos complexos nin planificar a longo prazo; responde de maneira inmediata aos movementos do opoñente, pero facendo uso do que xa aprendeu de xogadas pasadas. A súa principal vantaxe é que, ao almacenar e analizar os movementos anteriores, pode detectar patróns no xogo do opoñente e adaptarse a eles, mellorando as súas posibilidades de gañar nas seguintes partidas.
+En resumo, este axente aprende dos erros e acertos previos e utiliza esa memoria para tomar decisións máis intelixentes e efectivas no xogo. Por iso, considéroo o tipo de axente máis adecuado para este caso.
 
 ![](./img/estrutura_do_axente.png)
 
