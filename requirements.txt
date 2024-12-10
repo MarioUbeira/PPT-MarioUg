@@ -1,0 +1,5 @@
+pytest == 8.3.4
+coverage == 7.6.9
+pytest-cov == 6.0.0
+pytest-sugar == 1.0.0
+termcolor == 2.5.0
