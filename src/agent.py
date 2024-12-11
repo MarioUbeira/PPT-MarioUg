@@ -1,15 +1,27 @@
 from rules import GameAction
+from patterns import PATTERNS
 import random
 
 class PredictAgent:
     def __init__(self):
         self.user_moves = []
+        self.patterns = PATTERNS
 
     def last_matches(self, move):
         """
-        Rexistra o movemento do usuario.
+        Rexistra o historial de partidas.
         """
         self.user_moves.append(move)
+        
+    def pattern_detecter(self):
+        """
+        Encargarase de detectar patróns no historial de partidas en base a un diccionario de posibles patróns.
+        """
+        if len(self.user_moves) < 10:
+            return None
+        for pattern in self.patterns:
+            return pattern
+        return None
 
     def predict(self):
         """
