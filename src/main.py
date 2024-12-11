@@ -15,7 +15,8 @@ def main():
         
         predictin.last_matches(user_action)
         computer_action = predictin.predict()
-        assess_game(user_action, computer_action)
+        result = assess_game(user_action, computer_action)
+        predictin.last_match = result
 
         if not play_another_round():
             break
