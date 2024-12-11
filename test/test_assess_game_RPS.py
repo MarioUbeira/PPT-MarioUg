@@ -1,6 +1,7 @@
 import pytest
 from src.rules import GameResult
 from src.main import GameAction, assess_game
+from src.agent import PredictAgent
 
 @pytest.mark.draw
 def test_draw():
@@ -73,3 +74,16 @@ def test_scissors_wins():
     assert GameResult.Defeat == assess_game(
         user_action=GameAction.Paper,
         computer_action=GameAction.Scissors)
+
+@pytest.mark.agent
+def test_last_matches():
+    """
+    Comproba o funcionamento do historial (last_matches)
+    """
+    proba = PredictAgent()
+    
+    assert len(proba.user_moves) == 0
+    
+    proba.last_matches(GameAction.Rock)
+    assert len(proba.user_moves) == 1
+    assert proba.user_moves[-1] == GameAction.Rock
