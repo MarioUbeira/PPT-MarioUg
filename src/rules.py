@@ -14,9 +14,15 @@ class GameResult(IntEnum):
 
 
 Victories = {
-    GameAction.Rock: GameAction.Paper,
-    GameAction.Paper: GameAction.Scissors,
-    GameAction.Scissors: GameAction.Rock
+    GameAction.Rock: [GameAction.Scissors],
+    GameAction.Paper: [GameAction.Rock],
+    GameAction.Scissors: [GameAction.Paper]
+}
+
+Defeats = {
+    GameAction.Rock: [GameAction.Paper],
+    GameAction.Paper: [GameAction.Scissors],
+    GameAction.Scissors: [GameAction.Rock]
 }
 
 def assess_game(user_action, computer_action):
