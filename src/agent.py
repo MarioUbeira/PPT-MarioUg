@@ -55,6 +55,7 @@ class PredictAgent:
         patron = self.pattern_detecter()
         
         if patron:
+            # print("Patrón detectado")
             return patron
             
         if self.last_match == GameResult.Victory:
