@@ -34,15 +34,7 @@ class PredictAgent:
         """
         if len(self.user_moves) < 3:
             return None
-        
-        for pattern_name, pattern_data in self.patterns.items():
-            # player_moves = pattern_data[0]
-            response_agent = pattern_data[1]
-
-            if pattern_name == 'repeated_rock':
-                rock_count = self.user_moves.count(GameAction.Rock)
-                if rock_count > len(self.user_moves) * 0.6:
-                    return response_agent 
+        return None 
 
     def predict(self):
         """
@@ -51,14 +43,10 @@ class PredictAgent:
         """
         if len(self.user_moves) == 0:
             return random.choice(list(GameAction))
-    
-        if self.user_moves[-1] == GameAction.Exit:
-            return random.choice(list(GameAction)) 
         
         patron = self.pattern_detecter()
         
         if patron:
-            # print("Patrón detectado")
             return patron
             
         if self.last_match == GameResult.Victory:
