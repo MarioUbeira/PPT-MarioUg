@@ -32,11 +32,17 @@ class PredictAgent:
         """
         Encargarase de detectar patróns no historial de partidas en base a un diccionario de posibles patróns.
         """
-        if len(self.user_moves) < 10:
+        if len(self.user_moves) < 3:
             return None
-        for pattern in self.patterns:
-            return pattern
-        return None
+        
+        for pattern_name, pattern_data in self.patterns.items():
+            # player_moves = pattern_data[0]
+            response_agent = pattern_data[1]
+
+            if pattern_name == 'repeated_rock':
+                rock_count = self.user_moves.count(GameAction.Rock)
+                if rock_count > len(self.user_moves) * 0.6:
+                    return response_agent 
 
     def predict(self):
         """
@@ -49,7 +55,7 @@ class PredictAgent:
         patron = self.pattern_detecter()
         
         if patron:
-            print("Patrón detectado")
+            return patron
             
         if self.last_match == GameResult.Victory:
             last_move = self.user_moves[-1]
