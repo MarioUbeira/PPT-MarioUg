@@ -51,6 +51,9 @@ class PredictAgent:
         """
         if len(self.user_moves) == 0:
             return random.choice(list(GameAction))
+    
+        if self.user_moves[-1] == GameAction.Exit:
+            return random.choice(list(GameAction)) 
         
         patron = self.pattern_detecter()
         
@@ -66,5 +69,5 @@ class PredictAgent:
             next_move = Victories[last_move][0]
         else:
             next_move = random.choice(list(GameAction))
-
+            
         return next_move
