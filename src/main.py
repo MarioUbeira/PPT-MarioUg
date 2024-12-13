@@ -9,21 +9,23 @@ def main():
     predictin = PredictAgent()
     user = get_user()
     predictin.create_csv(user)
+    result = 0
     while True:
         try:
             user_action = get_user_action()
-            if user_action.value == 3:
+
+            if user_action is None:
                 print(Fore.YELLOW + f"Partida rematada, grazas por xogar.")
                 break
+
+            computer_action = predictin.predict(result)
+            result = assess_game(user_action, computer_action)
+            predictin.last_matches(user_action, computer_action, result)
+            
         except ValueError:
             range_str = f"[0, {len(GameAction) - 1}]"
             print(Fore.RED + f"Elección invalida. Escolle unha opción no rango {range_str}!")
             continue
-    
-        computer_action = predictin.predict()
-        predictin.last_matches(user_action)
-        result = assess_game(user_action, computer_action)
-        predictin.last_match = result
 
 if __name__ == "__main__":
     main()

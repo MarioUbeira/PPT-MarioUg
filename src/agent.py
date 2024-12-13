@@ -6,8 +6,6 @@ import random
 class PredictAgent:
     def __init__(self):
         self.user_moves = []
-        self._last_match = None
-        self.last_agent_move = None
         
     def create_csv(self, player):
         """
@@ -21,22 +19,8 @@ class PredictAgent:
             with open(self.csv_file, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow(["user_move","agent_move", "result"])
-        
-    @property
-    def last_match(self):
-        """
-        Getter para o último resultado.
-        """
-        return self._last_match
 
-    @last_match.setter
-    def last_match(self, result):
-        """
-        Setter para actualizar o último resultado.
-        """
-        self._last_match = result
-
-    def last_matches(self, user_move):
+    def last_matches(self, user_move, computer_action, result):
         """
         Rexistra o historial de partidas.
         """
@@ -45,22 +29,21 @@ class PredictAgent:
             
         with open(self.csv_file, mode="a", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
-            writer.writerow([user_move, self.last_agent_move, self._last_match])
+            writer.writerow([user_move, computer_action, result])
             
-    def predict(self):
+    def predict(self, last_move):
         """
         Predí o seguinte movemento do usuario baseado no historial de partidas (last_matches), cando
         non atopa este patrón actúa en función do resultado da última partida. 
         """
-        if len(self.user_moves) == 0:
+        if last_move == 0:
             return random.choice(list(GameAction))  
-        
-        last_move = self.user_moves[-1]   
-        if self.last_match == GameResult.Tie:
-            self.last_agent_move = random.choice(list(GameAction))
-        elif self.last_match == GameResult.Victory:
-            self.last_agent_move = random.choice(list(GameAction))
-        else:
-            self.last_agent_move = random.choice(list(GameAction))
 
-        return self.last_agent_move
+        if last_move == GameResult.Tie:
+            agent_move = random.choice(list(GameAction))
+        elif last_move == GameResult.Victory:
+            agent_move = random.choice(list(GameAction))
+        else:
+            agent_move = random.choice(list(GameAction))
+
+        return agent_move
