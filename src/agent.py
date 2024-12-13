@@ -1,12 +1,22 @@
+import csv
+import os
 from rules import GameAction, GameResult, Victories, Defeats
-from patterns import PATTERNS
 import random
 
 class PredictAgent:
     def __init__(self):
-        self.user_moves = []
-        self.patterns = PATTERNS
+        self.user_moves = None
         self._last_match = None
+        
+    def create_csv(self, player):
+        """
+        Crea dinámicamente un arquivo CSV para cada xogador.
+        """
+        self.csv_file = f"data/{player}.csv"
+        if not os.path.exists(self.csv_file):
+            with open(self.csv_file, mode="w", newline="", encoding="utf-8") as file:
+                writer = csv.writer(file)
+                writer.writerow(["user_move","agent_move", "result"])
         
     @property
     def last_match(self):
@@ -27,14 +37,6 @@ class PredictAgent:
         Rexistra o historial de partidas.
         """
         self.user_moves.append(move)
-        
-    def pattern_detecter(self):
-        """
-        Encargarase de detectar patróns no historial de partidas en base a un diccionario de posibles patróns.
-        """
-        if len(self.user_moves) < 3:
-            return None
-        return None 
 
     def predict(self):
         """
@@ -42,20 +44,14 @@ class PredictAgent:
         non atopa este patrón actúa en función do resultado da última partida. 
         """
         if len(self.user_moves) == 0:
-            return random.choice(list(GameAction))
-        
-        patron = self.pattern_detecter()
-        
-        if patron:
-            return patron
-            
-        if self.last_match == GameResult.Victory:
-            last_move = self.user_moves[-1]
-            next_move = Defeats[Defeats[last_move][0]][0]
-        elif self.last_match == GameResult.Defeat:
-            last_move = self.user_moves[-1]
-            next_move = Victories[last_move][0]
-        else:
+            return random.choice(list(GameAction))  
+        last_move = self.user_moves[-1]   
+        print(last_move)
+        if self.last_match == GameResult.Tie:
             next_move = random.choice(list(GameAction))
-            
+        elif self.last_match == GameResult.Victory:
+            next_move = Defeats[Defeats[last_move][0]][0]
+        else:
+            next_move = Victories[Victories[last_move][0]][0]
+
         return next_move

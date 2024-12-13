@@ -1,13 +1,14 @@
 from rules import GameAction, assess_game
 from agent import PredictAgent
-from user import get_user_action
+from user import get_user, get_user_action
 from colorama import init, Fore
 
 init(autoreset=True) #just_fix_windows_console() no me funciona
 
 def main():
     predictin = PredictAgent()
-    
+    user = get_user()
+    predictin.create_csv(user)
     while True:
         try:
             user_action = get_user_action()

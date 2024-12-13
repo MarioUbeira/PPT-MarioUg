@@ -8,6 +8,10 @@ TRANSLATIONS = {
     "Exit": "Saír"
 }
 
+def get_user():
+    player = input("Introduce o teu nome: ")
+    return player
+    
 def get_user_action():
     
     colors = {
