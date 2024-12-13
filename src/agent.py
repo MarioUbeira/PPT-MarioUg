@@ -1,19 +1,19 @@
 import csv
 import os
-from rules import GameAction, GameResult, Victories, Defeats
 import random
+from collections import Counter
+from rules import GameAction, GameResult, Victories, Defeats
 
 class PredictAgent:
     def __init__(self):
-        self.user_moves = []
+        if not os.path.exists("data"):
+            os.makedirs("data")
+        self.csv_file = None
         
     def create_csv(self, player):
         """
         Crea dinámicamente un arquivo CSV para cada xogador.
         """
-        if not os.path.exists("data"):
-            os.makedirs("data")
-            
         self.csv_file = f"data/{player}.csv"
         if not os.path.exists(self.csv_file):
             with open(self.csv_file, mode="w", newline="", encoding="utf-8") as file:
@@ -24,26 +24,49 @@ class PredictAgent:
         """
         Rexistra o historial de partidas.
         """
-        if self.csv_file is None:
-            self.csv_file = "data/default.csv"
-            
         with open(self.csv_file, mode="a", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow([user_move, computer_action, result])
             
-    def predict(self, last_move):
+    def calculate_user_percentages(self):
         """
-        Predí o seguinte movemento do usuario baseado no historial de partidas (last_matches), cando
-        non atopa este patrón actúa en función do resultado da última partida. 
+        Calcula as porcentaxes de uso de cada acción por parte do usuario rexistrado.
         """
-        if last_move == 0:
-            return random.choice(list(GameAction))  
+        user_moves_counter = Counter()
 
-        if last_move == GameResult.Tie:
-            agent_move = random.choice(list(GameAction))
-        elif last_move == GameResult.Victory:
-            agent_move = random.choice(list(GameAction))
+        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                user_move = GameAction(int(row[0]))
+                user_moves_counter[user_move] += 1
+
+        total_moves = sum(user_moves_counter.values())
+        if total_moves == 0:
+            return {action.name: 0.0 for action in GameAction}
+
+        return {
+            action.name: (user_moves_counter[action] / total_moves) * 100
+            for action in GameAction
+        }  
+        
+    def predict(self):
+        """
+        Predí o seguinte movemento do usuario rexistrado baseado no seu historial de partidas persoal. 
+        """
+        if not os.path.exists(self.csv_file):
+            return random.choice(list(GameAction))
+        
+        user_percentages = self.calculate_user_percentages()
+        if all(percentage == 0.0 for percentage in user_percentages.values()):
+            return random.choice(list(GameAction))
+        
+        predicted_user_move = max(user_percentages, key=lambda x: user_percentages[x])
+        predicted_user_move = GameAction[predicted_user_move]
+        
+        if predicted_user_move in Victories:
+            agent_move = random.choice(Defeats[predicted_user_move])
         else:
-            agent_move = random.choice(list(GameAction))
-
+              agent_move = random.choice(list(GameAction)) 
+        
         return agent_move

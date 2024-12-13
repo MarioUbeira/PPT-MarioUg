@@ -18,10 +18,10 @@ def main():
                 print(Fore.YELLOW + f"Partida rematada, grazas por xogar.")
                 break
 
-            computer_action = predictin.predict(result)
+            computer_action = predictin.predict()
             result = assess_game(user_action, computer_action)
             predictin.last_matches(user_action, computer_action, result)
-            
+            # print(predictin.calculate_user_percentages())
         except ValueError:
             range_str = f"[0, {len(GameAction) - 1}]"
             print(Fore.RED + f"Elección invalida. Escolle unha opción no rango {range_str}!")
