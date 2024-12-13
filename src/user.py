@@ -9,8 +9,16 @@ TRANSLATIONS = {
 }
 
 def get_user():
-    player = input("Introduce o teu nome: ")
-    return player
+    while True:
+        player = input(Fore.MAGENTA + f"Introduce o teu nome (Máx 15 caracteres): {Fore.RESET}").strip()
+        if not player:
+            print(Fore.RED + "O nome non pode quedar baleiro. Ténteo de novo.")
+            continue
+        player = player.lower().replace(" ", "_")
+        if len(player) > 15:
+            print(Fore.RED + "O nome non pode ter máis de 15 caracteres. Ténteo de novo.")
+            continue
+        return player
     
 def get_user_action():
     
