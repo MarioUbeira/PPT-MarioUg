@@ -1,4 +1,5 @@
-from rules import GameAction, assess_game
+from rules import GameAction
+from game import assess_game, aggregate, draw_scoreboard
 from agent import PredictAgent
 from user import get_user, get_user_action
 from colorama import init, Fore
@@ -21,7 +22,10 @@ def main():
             computer_action = predictin.predict()
             result = assess_game(user_action, computer_action)
             predictin.last_matches(user_action, computer_action, result)
-            # print(predictin.calculate_user_percentages())
+            # Marcador
+            player_wins, agent_wins = aggregate(user)  
+            draw_scoreboard(user, player_wins, agent_wins)
+
         except ValueError:
             range_str = f"[0, {len(GameAction) - 1}]"
             print(Fore.RED + f"Elección invalida. Escolle unha opción no rango {range_str}!")

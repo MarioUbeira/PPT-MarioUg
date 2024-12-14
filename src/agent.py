@@ -2,7 +2,7 @@ import csv
 import os
 import random
 from collections import Counter
-from rules import GameAction, GameResult, Victories, Defeats
+from rules import GameAction, Victories, Defeats
 
 class PredictAgent:
     def __init__(self):
