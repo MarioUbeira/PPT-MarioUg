@@ -1,5 +1,5 @@
 from rules import GameAction
-from game import assess_game, aggregate, draw_scoreboard
+from game import assess_game, aggregate, draw_scoreboard, postgame_stats
 from agent import PredictAgent
 from user import get_user, get_user_action
 from colorama import init, Fore
@@ -17,9 +17,10 @@ def main():
 
             if user_action is None:
                 print(Fore.YELLOW + f"Partida rematada, grazas por xogar.")
+                postgame_stats(user)
                 break
 
-            computer_action = predictin.predict()
+            computer_action = predictin.get_computer_action()
             result = assess_game(user_action, computer_action)
             predictin.last_matches(user_action, computer_action, result)
             # Marcador

@@ -50,7 +50,7 @@ class PredictAgent:
             for action in GameAction
         }  
         
-    def predict(self):
+    def get_computer_action(self):
         """
         Predí o seguinte movemento do usuario rexistrado baseado no seu historial de partidas persoal. 
         """
