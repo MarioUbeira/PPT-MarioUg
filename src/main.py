@@ -24,7 +24,7 @@ def main():
             result = assess_game(user_action, computer_action)
             predictin.last_matches(user_action, computer_action, result)
             # Marcador
-            player_wins, agent_wins = aggregate(user)  
+            player_wins, agent_wins = aggregate(user)
             draw_scoreboard(user, player_wins, agent_wins)
 
         except ValueError:

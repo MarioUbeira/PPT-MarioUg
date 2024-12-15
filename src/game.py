@@ -89,6 +89,7 @@ def postgame_stats(user):
     games = []
     winrate_per_game = []
     agent_win = 0
+    draw = 0
     total_games = 0
 
     with open(csv_file, mode="r", newline="", encoding="utf-8") as file:
@@ -100,7 +101,11 @@ def postgame_stats(user):
             result = int(row[2])
             if result == 1:
                 agent_win += 1
-            winrate = (agent_win / total_games) * 100 if total_games > 0 else 0
+            elif result == 2:
+                draw += 1
+                
+            win_or_loss_matches = total_games - draw
+            winrate = (agent_win / win_or_loss_matches) * 100 if total_games > 0 else 0
             games.append(total_games)
             winrate_per_game.append(winrate)
 
@@ -114,10 +119,12 @@ def postgame_stats(user):
     plt.plot(games, winrate_per_game, marker="o", color="#F08C00", linewidth=2.5, markersize=6)
     plt.title(f"Rendemento do Axente vs {user.capitalize()}", fontsize=18, fontweight="bold", color="#C2255C", pad=20)
     plt.xlabel(f"Número de partidas xogadas ({total_games})", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
-    plt.ylabel(f"Porcentaxe de victorias ({winrate_per_game[-1]:.2f}%)", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
+    plt.ylabel(f"Porcentaxe de victorias* ({winrate_per_game[-1]:.2f}%)", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
     plt.text(0.95, 0.95, f'Partidas - {total_games}\nVictorias - {agent_win}', fontsize=9, color="#12B886", 
          ha='right', va='top', transform=plt.gca().transAxes, fontweight='bold', 
          bbox=dict(facecolor='black', alpha=0.3, edgecolor='none', boxstyle='round,pad=0.5'))
+    plt.text(-0.10, -0.20, "*Sobre o total de partidas gañadas ou perdidas,\ndespreciando empates.", fontsize=8, color="#E8590C", 
+         ha='left', va='bottom', transform=plt.gca().transAxes)
     plt.tick_params(axis='x', colors='#E8590C')
     plt.tick_params(axis='y', colors='#E8590C')
     plt.xlim(0, max(games))
