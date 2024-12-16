@@ -123,7 +123,7 @@ def postgame_stats(user):
     plt.text(0.95, 0.95, f'Partidas - {total_games}\nVictorias - {agent_win}', fontsize=9, color="#12B886", 
          ha='right', va='top', transform=plt.gca().transAxes, fontweight='bold', 
          bbox=dict(facecolor='black', alpha=0.3, edgecolor='none', boxstyle='round,pad=0.5'))
-    plt.text(-0.10, -0.20, "*Sobre o total de partidas gañadas ou perdidas,\ndespreciando empates.", fontsize=8, color="#E8590C", 
+    plt.text(-0.10, -0.20, "*Sobre o total de partidas gañadas\nou perdidas, despreciando empates.", fontsize=8, color="#E8590C", 
          ha='left', va='bottom', transform=plt.gca().transAxes)
     plt.tick_params(axis='x', colors='#E8590C')
     plt.tick_params(axis='y', colors='#E8590C')
