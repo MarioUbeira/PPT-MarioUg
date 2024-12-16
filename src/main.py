@@ -1,3 +1,5 @@
+import os
+import time
 from rules import GameAction
 from game import assess_game, aggregate, draw_scoreboard, postgame_stats
 from agent import PredictAgent
@@ -13,6 +15,7 @@ def main():
     result = 0
     while True:
         try:
+            os.system('cls' if os.name == 'nt' else 'clear')
             user_action = get_user_action()
 
             if user_action is None:
@@ -26,7 +29,8 @@ def main():
             # Marcador
             player_wins, agent_wins = aggregate(user)
             draw_scoreboard(user, player_wins, agent_wins)
-
+            time.sleep(1)
+            
         except ValueError:
             range_str = f"[0, {len(GameAction) - 1}]"
             print(Fore.RED + f"Elección invalida. Escolle unha opción no rango {range_str}!")
