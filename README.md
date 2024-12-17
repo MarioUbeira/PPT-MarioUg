@@ -28,13 +28,13 @@ O obxectivo de esta tarefa e crear un axente que se base nos resultados de parti
 
 ## 2. Identificación do tipo de axente e estrutura 
 
-**Axente reactivo baseado en modelos**: Un axente reactivo con estado baseado en modelos é un xogador automatizado que, en lugar de simplemente reaccionar de forma instintiva ou aleatoria, lembra o que sucedeu en xogadas anteriores e utiliza esa información para mellorar as súas decisións no futuro. Este tipo de axente non necesita facer cálculos complexos nin planificar a longo prazo; responde de maneira inmediata aos movementos do opoñente, pero facendo uso do que xa aprendeu de xogadas pasadas. A súa principal vantaxe é que, ao almacenar e analizar os movementos anteriores, pode detectar patróns no xogo do opoñente e adaptarse a eles, mellorando as súas posibilidades de gañar nas seguintes partidas.
+**Axente reactivo baseado en modelos**: Un axente reactivo baseado en modelos é un xogador que, en lugar de simplemente reaccionar en base a instruccións preestablecidas, e capaz de lembrar o que sucedeu en partidas anteriores e utilizar esa información para mellorar as súas decisións futuras. Este tipo de axente non precisa facer cálculos moi complexos nin planificar a longo prazo; o que lle permite responder de maneira inmediata aos movementos do adversario, pero facendo uso da experiencia. A súa principal vantaxe é que, ao almacenar e analizar os movementos anteriores, pode detectar patróns no xogo do opoñente e adaptarse a eles, aumentando as súas posibilidades de gañar nas seguintes partidas.
 
 En resumo, este axente aprende dos erros e acertos previos e utiliza esa memoria para tomar decisións máis intelixentes e efectivas no xogo. Por iso, considéroo o tipo de axente máis adecuado para este caso.
 
 ![](./img/estrutura_do_axente.png)
 
-🔴 **Axente** ⮞ É o xogador automatizado que toma decisións baseándose na información acumulada das partidas anteriores e nos patróns detectados no comportamento do opoñente. O axente actúa de maneira pseudo-racional, buscando maximizar as súas posibilidades de éxito en cada partida.
+🔴 **Axente** ⮞ É o xogador automatizado que toma decisións baseándose na información acumulada das partidas anteriores e nos patróns detectados no comportamento do opoñente. O axente actúa de maneira racional, buscando maximizar as súas posibilidades de éxito en cada partida.
 
 🟢 **Sensores** ⮞ Captan información do entorno, como o último movemento do opoñente e o resultado da última partida, actualizando así os datos dispoñibles para o axente.
 
@@ -53,3 +53,49 @@ En resumo, este axente aprende dos erros e acertos previos e utiliza esa memoria
 🟢 **Actuadores** ⮞ Executan a decisión tomada polo axente, seleccionando pedra, papel ou tesoira para xogar a seguinte partida.
 
 🔴 **Medio ambiente** ⮞ Inclúe o opoñente e as regras do xogo, proporcionando ao axente o contexto no que se desenvolven as partidas.
+
+## 3. Ampliación: RPSLS
+
+## 4. Conclusións
+
+## 5. Instalación e uso
+
+**1.** Creamos un cartafol para o repositorio e ubicámonos nel:
+``` bash
+mkdir cartafol_ppt
+cd /ruta/ao/cartafol_ppt
+```
+**2.** Copiamos o enlace do repo e o clonamos no noso cartafol:
+``` bash
+git clone https://github.com/MarioUbeira/PPT-MarioUg.git
+```
+**3.** Creamos unha contorna virtual e a activamos:
+> Linux e MacOS
+``` bash
+python3 -m venv nome_contorna
+source nome_contorna/bin/activate
+# Se aparece o nome da contorna no inicio do prompt significa que se activou correctamente:
+# (nome_contorna) C:/ruta/ao/cartafol_ppt$
+```
+> Windows
+``` powershell
+python3 -m venv nome_contorna
+.\nome_contorna\Scripts\activate
+```
+*NOTA: A activación da contorna virtual pode fallar en Windows se as políticas de execución están restrinxidas, nese caso utilizar o seguinte comando:*
+``` powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+**4.** Descargamos e instalamos as dependencias:
+``` bash
+pip install -r requirements.txt
+```
+**5.** Execución do programa:
+> Linux e MacOS
+``` bash
+python3 src/main.py
+```
+> Windows
+``` powershell
+python3 .\src\main.py
+```
