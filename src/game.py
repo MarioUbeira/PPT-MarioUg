@@ -83,7 +83,7 @@ def draw_scoreboard(user, player_wins, agent_wins):
 
 def postgame_stats(user):
     """
-    Xenera unha gráfica que amosa a eficacia do axente contra o usuario rexistrado.
+    Xera unha gráfica que amosa a eficacia do axente contra o usuario rexistrado.
     """
     csv_file = f"data/{user}.csv"
     games = []

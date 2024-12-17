@@ -17,7 +17,6 @@ def main():
         try:
             os.system('cls' if os.name == 'nt' else 'clear')
             user_action = get_user_action()
-
             if user_action is None:
                 print(Fore.YELLOW + f"Partida rematada, grazas por xogar.")
                 postgame_stats(user)
@@ -29,7 +28,7 @@ def main():
             # Marcador
             player_wins, agent_wins = aggregate(user)
             draw_scoreboard(user, player_wins, agent_wins)
-            time.sleep(1)
+            time.sleep(1.5)
             
         except ValueError:
             range_str = f"[0, {len(GameAction) - 1}]"
