@@ -2,7 +2,7 @@
 
 Repositorio para o proxecto Pedra, Papel, Tesoiras da materia Modelos de Intelixencia Artificial.  
 
-O obxectivo de esta tarefa e crear un axente que se base nos resultados de partidas anteriores para tentar predicir o seguinte movemento do adversario e así maximizar a súa probabilidade de vitoria.  
+O obxectivo principal desta tarefa é crear un axente que trate de obter a mellor porcentaxe de vitorias posibles no Pedra, Papel, Tesoiras. Para iso, optei por implementar un axente reactivo baseado en modelos, que se serve dun historial personalizado das xogadas de cada adversario para detectar patróns no seu comportamento. Ademais disto, o axente emprega conceptos de probabilidade e as regras da cadea de Markov para predicir os movementos futuros do opoñente, optimizando así as súas decisións e maximizando as probabilidades de vitoria en cada partida.
 
 ## 1. Especificación da contorna de tarefas  
 
