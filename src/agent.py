@@ -55,8 +55,6 @@ class PredictAgent:
         """
         Constrúe unha matriz de transición baseada no historial do CSV.
         """
-        self.markov_matrix = {action: Counter() for action in GameAction}
-
         with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)
