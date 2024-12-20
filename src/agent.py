@@ -29,9 +29,10 @@ class PredictAgent:
             writer = csv.writer(file)
             writer.writerow([user_move, computer_action, result])
             
-    def calculate_user_percentages(self):
+    def counter_move_percentages(self):
         """
-        Calcula as porcentaxes de uso de cada acción por parte do usuario rexistrado.
+        Calcula as porcentaxes de uso de cada acción por parte do usuario rexistrado e
+        devolve a máis empregada.
         """
         user_moves_counter = Counter()
 
@@ -44,12 +45,18 @@ class PredictAgent:
 
         total_moves = sum(user_moves_counter.values())
         if total_moves == 0:
-            return {action.name: 0.0 for action in GameAction}
+            return random.choice(list(GameAction))
 
-        return {
-            action.name: (user_moves_counter[action] / total_moves) * 100
-            for action in GameAction
-        } 
+        most_used_action = max(user_moves_counter, key=user_moves_counter.get)
+
+        if most_used_action == GameAction.Rock:
+            return GameAction.Paper
+        elif most_used_action == GameAction.Paper:
+            return GameAction.Scissors
+        elif most_used_action == GameAction.Scissors:
+            return GameAction.Rock
+
+        return random.choice(list(GameAction))
         
     def calculate_markov_matrix(self):
         """
@@ -65,7 +72,7 @@ class PredictAgent:
                     self.markov_matrix[previous_move][user_move] += 1
                 previous_move = user_move
 
-    def predict_next_move(self):
+    def predict_next_move_markov(self):
         """
         Devolve o máis probable seguinte movemento do usuario baseado na cadéa de Markov.
         https://es.wikipedia.org/wiki/Cadena_de_Márkov
@@ -94,6 +101,11 @@ class PredictAgent:
         Detecta patróns cíclicos nos movementos do usuario.
         Devolve o próximo movemento esperado se se detecta un patrón.
         """
+        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+            moves = [GameAction(int(row[0])) for row in list(reader)[-10:]]
+
         if len(moves) < 4:
             return None
 
@@ -105,15 +117,8 @@ class PredictAgent:
         
     def get_computer_action(self):
         """
-        Predí o seguinte movemento do usuario rexistrado baseado en diferentes estratexias a
-        partires do seu historial.
-        1º- Se o Axente no conta con suficiente información actuará de forma aleatoria.
-        2º- Se o Axente detecta algún patrón, como ciclos (2>1>0>2>...) ou repeticións (1>1>1>...),
-        busca contraatacar o seguinte movemento do patrón.
-        2.1º- Se o Axente conta con suficiente información pero non atopa ningún patrón baseará o seu
-        seguinte movemento na cadéa de Markov e nos porcentaxes de cada movemento do usuario.
-        Compara o movemento esperado segundo Markov co movemento con maior porcentaxe de uso, se coinciden
-        contraataca a ese movemento, e se non compara co segundo máis empregado.
+        Asigna a cada posible estratexia un peso e selecciona unha delas
+        pseudoaleatoriamente en base a iso.
         """
         if not os.path.exists(self.csv_file):
             return random.choice(list(GameAction))
@@ -127,28 +132,13 @@ class PredictAgent:
                 if len(last_moves) > 5:
                     last_moves.pop(0)
 
-        cyclic_move = self.detect_cyclic_pattern(last_moves)
-        if cyclic_move is not None:
-            return random.choice(Defeats[cyclic_move])
-
-        if len(set(last_moves[-3:])) == 1:
-            return random.choice(Defeats[last_moves[-1]])
-
-        user_percentages = self.calculate_user_percentages()
-        most_used_move = GameAction[ max(user_percentages, key=user_percentages.get) ]
-        second_most_used_move = GameAction[ sorted(user_percentages, key=user_percentages.get, reverse=True)[1] ]
-
-        predicted_user_move = self.predict_next_move()
-
-        counter_most_used = random.choice(Victories[most_used_move])
-        counter_predicted = random.choice(Victories[predicted_user_move])
-
-        if counter_most_used == counter_predicted:
-            return counter_most_used
-        elif second_most_used_move == counter_predicted:
-            return second_most_used_move
-        else: 
-            return counter_most_used
+        strategies = [
+            lambda: self.predict_next_move_markov(),
+            lambda: self.detect_cyclic_pattern(last_moves) or random.choice(list(GameAction)),
+            lambda: self.counter_move_percentages(),
+        ]
+        selected_strategy = random.choices(strategies, weights=[0.375, 0.375, 0.25])[0]
+        return selected_strategy()
 
 
 

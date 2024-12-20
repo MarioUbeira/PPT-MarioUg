@@ -6,7 +6,6 @@ class GameAction(IntEnum):
     Paper = 1
     Scissors = 2
 
-
 class GameResult(IntEnum):
     Victory = 0
     Defeat = 1
