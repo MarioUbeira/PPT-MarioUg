@@ -1,7 +1,7 @@
 import csv
 import os
 import random
-from collections import Counter
+from collections import Counter, defaultdict
 from rules import GameAction, Victories, Defeats
 
 class PredictAgent:
@@ -9,17 +9,26 @@ class PredictAgent:
         if not os.path.exists("data"):
             os.makedirs("data")
         self.csv_file = None
-        self.markov_matrix = {action: Counter() for action in GameAction}
+        self.markov_matrix = defaultdict(lambda: defaultdict(int))
         
+    def _read_csv(self):
+        """
+        Lee o arquivo csv.
+        """
+        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+            return [row for row in reader]
+    
     def create_csv(self, player):
         """
-        Crea dinámicamente un arquivo CSV para cada xogador.
+         Crea dinámicamente un arquivo CSV para cada xogador.
         """
         self.csv_file = f"data/{player}.csv"
         if not os.path.exists(self.csv_file):
             with open(self.csv_file, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)
-                writer.writerow(["user_move","agent_move", "result"])
+                writer.writerow(["user_move", "agent_move", "result"])
 
     def last_matches(self, user_move, computer_action, result):
         """
@@ -35,13 +44,10 @@ class PredictAgent:
         devolve a máis empregada.
         """
         user_moves_counter = Counter()
-
-        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            next(reader)
-            for row in reader:
-                user_move = GameAction(int(row[0]))
-                user_moves_counter[user_move] += 1
+        rows = self._read_csv()
+        for row in rows:
+            user_move = GameAction(int(row[0]))
+            user_moves_counter[user_move] += 1
 
         total_moves = sum(user_moves_counter.values())
         if total_moves == 0:
@@ -49,69 +55,62 @@ class PredictAgent:
 
         most_used_action = max(user_moves_counter, key=user_moves_counter.get)
 
-        if most_used_action == GameAction.Rock:
-            return GameAction.Paper
-        elif most_used_action == GameAction.Paper:
-            return GameAction.Scissors
-        elif most_used_action == GameAction.Scissors:
-            return GameAction.Rock
+        if most_used_action in Victories:
+            return random.choice(Defeats[most_used_action])
 
         return random.choice(list(GameAction))
-        
+
     def calculate_markov_matrix(self):
         """
-        Constrúe unha matriz de transición baseada no historial do CSV.
+         Constrúe unha matriz de transición baseada no historial do CSV.
         """
-        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            next(reader)
-            previous_move = None
-            for row in reader:
-                user_move = GameAction(int(row[0]))
-                if previous_move is not None:
-                    self.markov_matrix[previous_move][user_move] += 1
-                previous_move = user_move
+        rows = self._read_csv()
+        previous_move = None
+        for row in rows:
+            user_move = GameAction(int(row[0]))
+            if previous_move is not None:
+                self.markov_matrix[previous_move][user_move] += 1
+            previous_move = user_move
 
     def predict_next_move_markov(self):
         """
         Devolve o máis probable seguinte movemento do usuario baseado na cadéa de Markov.
         https://es.wikipedia.org/wiki/Cadena_de_Márkov
         """
-        self.calculate_markov_matrix()
-        
-        total_transitions = sum(sum(counter.values()) for counter in self.markov_matrix.values())
-        if total_transitions == 0:
-            return random.choice(list(GameAction))
-        
-        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            next(reader)
-            last_move = None
-            for row in reader:
-                last_move = GameAction(int(row[0]))
+        if not self.markov_matrix:
+            self.calculate_markov_matrix()
+
+        rows = self._read_csv()
+        last_move = GameAction(int(rows[-1][0])) if rows else None
 
         if last_move is None or not self.markov_matrix[last_move]:
             return random.choice(list(GameAction))
 
         predicted_move = max(self.markov_matrix[last_move], key=self.markov_matrix[last_move].get)
-        return predicted_move
+        return random.choice(Defeats[predicted_move])
 
     def detect_cyclic_pattern(self, moves):
         """
         Detecta patróns cíclicos nos movementos do usuario.
         Devolve o próximo movemento esperado se se detecta un patrón.
         """
-        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            next(reader)
-            moves = [GameAction(int(row[0])) for row in list(reader)[-10:]]
-
-        if len(moves) < 4:
+        
+        if len(moves) < 3:
             return None
 
-        for cycle in range(2, 4):
-            if moves[-cycle:] == moves[-2 * cycle:-cycle]:
-                return moves[-cycle]
+        for length in range(2, len(moves) // 2 + 1):
+            for i in range(len(moves) - length):
+                if moves[i:i+length] == [moves[i]] * length:
+                    user_move = moves[i]
+                    return random.choice(Defeats[user_move])
+
+        for cycle_len in range(2, len(moves) // 2 + 1):
+            for start in range(len(moves) - cycle_len):
+                cycle = moves[start:start+cycle_len]
+                for offset in range(start + cycle_len, len(moves) - cycle_len + 1):
+                    if moves[offset:offset + cycle_len] == cycle:
+                        user_move = moves[start]
+                        return random.choice(Defeats[user_move])
 
         return None
         
@@ -123,23 +122,19 @@ class PredictAgent:
         if not os.path.exists(self.csv_file):
             return random.choice(list(GameAction))
 
-        with open(self.csv_file, mode="r", newline="", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            next(reader)
-            last_moves = []
-            for row in reader:
-                last_moves.append(GameAction(int(row[0])))
-                if len(last_moves) > 5:
-                    last_moves.pop(0)
+        rows = self._read_csv()
+        last_moves = [GameAction(int(row[0])) for row in rows[-3:]]
+
+        detected_pattern = self.detect_cyclic_pattern(last_moves)
+        
+        if detected_pattern is not None:
+            return detected_pattern 
 
         strategies = [
             lambda: self.predict_next_move_markov(),
-            lambda: self.detect_cyclic_pattern(last_moves) or random.choice(list(GameAction)),
             lambda: self.counter_move_percentages(),
+            lambda: random.choice(list(GameAction)),
         ]
-        selected_strategy = random.choices(strategies, weights=[0.375, 0.375, 0.25])[0]
+
+        selected_strategy = random.choices(strategies, weights=[0.45, 0.45, 0.1])[0]
         return selected_strategy()
-
-
-
-

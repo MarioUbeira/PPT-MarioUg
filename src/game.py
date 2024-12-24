@@ -2,6 +2,7 @@ from colorama import Fore
 from rules import GameAction, GameResult
 import csv
 import matplotlib.pyplot as plt
+from collections import Counter
 import seaborn as sns
 
 def assess_game(user_action, computer_action):
@@ -83,7 +84,7 @@ def draw_scoreboard(user, player_wins, agent_wins):
 
 def postgame_stats(user):
     """
-    Xera unha gráfica que amosa a eficacia do axente contra o usuario rexistrado.
+    Xera gráficas separadas que amosan a eficacia do axente contra o usuario rexistrado.
     """
     csv_file = f"data/{user}.csv"
     games = []
@@ -92,18 +93,27 @@ def postgame_stats(user):
     draw = 0
     total_games = 0
 
+    agent_moves_counter = Counter()
+    result_counter = Counter()
+
     with open(csv_file, mode="r", newline="", encoding="utf-8") as file:
         reader = csv.reader(file)
         next(reader)
-        
+
         for row in reader:
             total_games += 1
+            user_move = GameAction(int(row[0]))
+            agent_move = GameAction(int(row[1]))
             result = int(row[2])
+
             if result == 1:
                 agent_win += 1
             elif result == 2:
                 draw += 1
-                
+
+            agent_moves_counter[agent_move] += 1
+            result_counter[result] += 1
+
             win_or_loss_matches = total_games - draw
             winrate = (agent_win / win_or_loss_matches) * 100 if total_games > 0 else 0
             games.append(total_games)
@@ -115,6 +125,7 @@ def postgame_stats(user):
     sns.set_theme(style="whitegrid")
     plt.rcParams['axes.facecolor'] = '#0E4D80'
     plt.rcParams['figure.facecolor'] = '#0E4D80'
+
     plt.figure(figsize=(8, 5))
     plt.plot(games, winrate_per_game, marker="o", color="#F08C00", linewidth=2.5, markersize=6)
     plt.title(f"Rendemento do Axente vs {user.capitalize()}", fontsize=18, fontweight="bold", color="#C2255C", pad=20)
@@ -129,5 +140,33 @@ def postgame_stats(user):
     plt.tick_params(axis='y', colors='#E8590C')
     plt.xlim(0, max(games))
     plt.ylim(0, 100)
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(8, 5))
+    result_labels = ['Victorias', 'Derrotas', 'Empates']
+    result_percentages = [
+        (result_counter[GameResult.Defeat] / total_games) * 100,
+        (result_counter[GameResult.Victory] / total_games) * 100,
+        (result_counter[GameResult.Tie] / total_games) * 100
+    ]
+    plt.bar(result_labels, result_percentages, color=['green', 'red', 'gray'])
+    plt.title("Distribución de Resultados", fontsize=14, fontweight="bold", color="#C2255C")
+    plt.ylabel("Porcentaxe", fontsize=12, color="#12B886")
+    plt.tick_params(axis='x', colors='#E8590C')
+    plt.tick_params(axis='y', colors='#E8590C')
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(8, 5))
+    agent_move_labels = ['Pedra', 'Papel', 'Tesoiras']
+    agent_move_percentages = [
+        (agent_moves_counter[GameAction.Rock] / total_games) * 100,
+        (agent_moves_counter[GameAction.Paper] / total_games) * 100,
+        (agent_moves_counter[GameAction.Scissors] / total_games) * 100
+    ]
+    plt.pie(agent_move_percentages, labels=agent_move_labels, autopct='%1.1f%%', startangle=90, colors=["#F08C00", "#F0D100", "#12B886"])
+    plt.title("Distribución de movementos do Axente", fontsize=14, fontweight="bold", color="#C2255C")
+    plt.axis('equal')
     plt.tight_layout()
     plt.show()
