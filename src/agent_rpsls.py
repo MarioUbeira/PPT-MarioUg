@@ -2,9 +2,9 @@ import csv
 import os
 import random
 from collections import Counter, defaultdict
-from rules import GameAction, Victories, Defeats
+from rules_rpsls import GameAction, Victories, Defeats
 
-class PredictAgent:
+class PredictAgentRPSLS:
     def __init__(self):
         if not os.path.exists("data"):
             os.makedirs("data")
@@ -24,7 +24,7 @@ class PredictAgent:
         """
          Crea dinámicamente un arquivo CSV para cada xogador.
         """
-        self.csv_file = f"data/{player}_rps.csv"
+        self.csv_file = f"data/{player}_rpsls.csv"
         if not os.path.exists(self.csv_file):
             with open(self.csv_file, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)

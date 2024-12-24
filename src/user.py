@@ -1,10 +1,13 @@
 from rules import GameAction
+from rules_rpsls import GameAction
 from colorama import Fore
 
 TRANSLATIONS = {
     "Rock": "Pedra",
     "Paper": "Papel",
     "Scissors": "Tesoiras",
+    "Lizard": "Lagarto",
+    "Spock": "Spock",
     "Exit": "Saír"
 }
 
@@ -20,25 +23,49 @@ def get_user():
             continue
         return player
     
-def get_user_action():
-    
+def get_game_choice():
+    while True:
+        try:
+            game_choice = int(input(Fore.MAGENTA + f"Escolle o xogo: RPS[0], RPSLS[1], Saír[9]: {Fore.RESET} "))
+            if game_choice == 0 or game_choice == 1:
+                return game_choice
+            elif game_choice == 9:
+                return None
+            else:
+                print(Fore.RED + "Introduce 0 para RPS ou 1 para RPSLS.")
+        except ValueError:
+            print(Fore.RED + "Introduce 0 para RPS ou 1 para RPSLS." + Fore.RESET)
+            
+def get_user_action(game_choice):
     colors = {
         "Rock": Fore.MAGENTA,
         "Paper": Fore.CYAN,
         "Scissors": Fore.MAGENTA,
+        "Lizard": Fore.CYAN,
+        "Spock": Fore.MAGENTA,
     }
-    # Scalable to more options (beyond rock, paper and scissors...)
-    game_choices = [f"{colors.get(game_action.name, Fore.WHITE)}{TRANSLATIONS.get(game_action.name, game_action.name)}[{game_action.value}{Fore.RESET}]" for game_action in GameAction]
+
+    if game_choice == 0:
+        game_choices = [f"{colors.get(game_action.name, Fore.WHITE)}{TRANSLATIONS.get(game_action.name, game_action.name)}[{game_action.value}]{Fore.RESET}" 
+                        for game_action in GameAction]
+    elif game_choice == 1:
+        game_choices = [f"{colors.get(game_action.name, Fore.WHITE)}{TRANSLATIONS.get(game_action.name, game_action.name)}[{game_action.value}]{Fore.RESET}" 
+                        for game_action in GameAction]
+    
     game_choices_str = Fore.WHITE + ", ".join(game_choices)
+    
     while True:
-            try:
-                user_selection = int(input(f"\nEscolle ({game_choices_str}, {Fore.YELLOW}Saír[3]{Fore.RESET}): "))
-                if user_selection >= 0 and user_selection <= 2:
+        try:
+            user_selection = int(input(f"\nEscolle ({game_choices_str}, {Fore.YELLOW}Saír[9]{Fore.RESET}): "))
+            if 0 <= user_selection <= len(game_choices) - 1:
+                if game_choice == 0:
                     user_action = GameAction(user_selection)
-                    return user_action
-                elif user_selection == 3:
-                    return None
                 else:
-                    print(Fore.RED + "Introduce un número entre 1 e 3, pailán." + Fore.RESET)
-            except ValueError:
-                print(Fore.RED + "Introduce un número entre 1 e 3, pailán." + Fore.RESET)
+                    user_action = GameAction(user_selection)
+                return user_action
+            elif user_selection == 9:
+                return None
+            else:
+                print(Fore.RED + "Introduce un número válido, pailán." + Fore.RESET)
+        except ValueError:
+            print(Fore.RED + "Introduce un número válido, pailán." + Fore.RESET)

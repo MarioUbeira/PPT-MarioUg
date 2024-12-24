@@ -1,55 +1,48 @@
 from colorama import Fore
-from rules import GameAction, GameResult
+from rules_rpsls import GameAction, GameResult, Victories
 import csv
 import matplotlib.pyplot as plt
 from collections import Counter
 import seaborn as sns
 
+TRANSLATIONS = {
+    "Rock": "Pedra",
+    "Paper": "Papel",
+    "Scissors": "Tesoiras",
+    "Lizard": "Lagarto",
+    "Spock": "Spock"
+}
+
 def assess_game(user_action, computer_action):
 
     game_result = None
 
+    user_action_translated = TRANSLATIONS[user_action.name]
+    computer_action_translated = TRANSLATIONS[computer_action.name]
+
     if user_action == computer_action:
-        print(Fore.BLUE + f"Xogador e axente escolleron {user_action.name}. Partida empatada!")
+        print(Fore.BLUE + f"Xogador e axente escolleron {user_action_translated}. Partida empatada!")
         game_result = GameResult.Tie
-
-    # You picked Rock
-    elif user_action == GameAction.Rock:
-        if computer_action == GameAction.Scissors:
-            print(Fore.GREEN + "Pedra aplasta Tesoiras. Gañaches!")
-            game_result = GameResult.Victory
-        else:
-            print(Fore.RED + "Papel cubre pedra. Perdiches!")
-            game_result = GameResult.Defeat
-
-    # You picked Paper
-    elif user_action == GameAction.Paper:
-        if computer_action == GameAction.Rock:
-            print(Fore.GREEN + "Papel cubre pedra. Gañaches!")
-            game_result = GameResult.Victory
-        else:
-            print(Fore.RED + "Tesoiras cortan papel. Perdiches!")
-            game_result = GameResult.Defeat
-
-    # You picked Scissors
-    elif user_action == GameAction.Scissors:
-        if computer_action == GameAction.Rock:
-            print(Fore.RED + "Pedra aplasta Tesoiras. Perdiches!")
-            game_result = GameResult.Defeat
-        else:
-            print(Fore.GREEN + "Tesoiras cortan papel. Gañaches!")
-            game_result = GameResult.Victory
+    elif computer_action in Victories[user_action]:
+        print(Fore.GREEN + f"{user_action_translated} vence a {computer_action_translated}. Gañaches!")
+        game_result = GameResult.Victory
+    else:
+        print(Fore.RED + f"{computer_action_translated} vence a {user_action_translated}. Perdiches!")
+        game_result = GameResult.Defeat
 
     return game_result
 
-def aggregate(player_name):
+def aggregate(user, game_choice):
     """
-    Devolve a cantidade de victorias de cada participante.
+    Devolve a cantidade de vitorias de cada participante.
     """
     player_wins = 0
     agent_wins = 0
 
-    csv_file = f"data/{player_name}.csv"
+    if game_choice == 0:
+        csv_file = f"data/{user}_rps.csv"
+    elif game_choice == 1:
+        csv_file = f"data/{user}_rpsls.csv"
 
     with open(csv_file, mode="r", newline="", encoding="utf-8") as file:
         reader = csv.reader(file)
@@ -82,11 +75,12 @@ def draw_scoreboard(user, player_wins, agent_wins):
     print(f"{' ' * 5}{user_color}{user.capitalize()} → {player_wins}{Fore.RESET}  -----  {agent_color}{agent_wins} ← Axente")
     print(Fore.LIGHTBLACK_EX + "*" * 50)
 
-def postgame_stats(user):
+def postgame_stats(user, game_choice):
     """
     Xera gráficas separadas que amosan a eficacia do axente contra o usuario rexistrado.
+    Se o xogo é RPS, mostra só as tres opcións (Pedra, Papel, Tesoiras).
+    Se o xogo é RPSLS, mostra tamén as outras dúas opcións (Lagarto, Spock).
     """
-    csv_file = f"data/{user}.csv"
     games = []
     winrate_per_game = []
     agent_win = 0
@@ -96,6 +90,13 @@ def postgame_stats(user):
     agent_moves_counter = Counter()
     result_counter = Counter()
 
+    if game_choice == 0:
+        game_actions = [GameAction.Rock, GameAction.Paper, GameAction.Scissors]
+        csv_file = f"data/{user}_rps.csv"
+    elif game_choice == 1:
+        game_actions = [GameAction.Rock, GameAction.Paper, GameAction.Scissors, GameAction.Lizard, GameAction.Spock]
+        csv_file = f"data/{user}_rpsls.csv"
+    
     with open(csv_file, mode="r", newline="", encoding="utf-8") as file:
         reader = csv.reader(file)
         next(reader)
@@ -130,8 +131,8 @@ def postgame_stats(user):
     plt.plot(games, winrate_per_game, marker="o", color="#F08C00", linewidth=2.5, markersize=6)
     plt.title(f"Rendemento do Axente vs {user.capitalize()}", fontsize=18, fontweight="bold", color="#C2255C", pad=20)
     plt.xlabel(f"Número de partidas xogadas ({total_games})", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
-    plt.ylabel(f"Porcentaxe de victorias* ({winrate_per_game[-1]:.2f}%)", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
-    plt.text(0.95, 0.95, f'Partidas - {total_games}\nVictorias - {agent_win}', fontsize=9, color="#12B886", 
+    plt.ylabel(f"Porcentaxe de vitorias* ({winrate_per_game[-1]:.2f}%)", fontweight="bold", fontsize=14, color="#12B886", labelpad=15)
+    plt.text(0.95, 0.95, f'Partidas - {total_games}\nVitorias - {agent_win}', fontsize=9, color="#12B886", 
          ha='right', va='top', transform=plt.gca().transAxes, fontweight='bold', 
          bbox=dict(facecolor='black', alpha=0.3, edgecolor='none', boxstyle='round,pad=0.5'))
     plt.text(-0.10, -0.20, "*Sobre o total de partidas gañadas\nou perdidas, despreciando empates.", fontsize=8, color="#E8590C", 
@@ -144,14 +145,14 @@ def postgame_stats(user):
     plt.show()
 
     plt.figure(figsize=(8, 5))
-    result_labels = ['Victorias', 'Derrotas', 'Empates']
+    result_labels = ['Vitorias', 'Derrotas', 'Empates']
     result_percentages = [
         (result_counter[GameResult.Defeat] / total_games) * 100,
         (result_counter[GameResult.Victory] / total_games) * 100,
         (result_counter[GameResult.Tie] / total_games) * 100
     ]
     plt.bar(result_labels, result_percentages, color=['green', 'red', 'gray'])
-    plt.title("Distribución de Resultados", fontsize=14, fontweight="bold", color="#C2255C")
+    plt.title("Distribución de resultados", fontsize=14, fontweight="bold", color="#C2255C")
     plt.ylabel("Porcentaxe", fontsize=12, color="#12B886")
     plt.tick_params(axis='x', colors='#E8590C')
     plt.tick_params(axis='y', colors='#E8590C')
@@ -159,13 +160,15 @@ def postgame_stats(user):
     plt.show()
 
     plt.figure(figsize=(8, 5))
-    agent_move_labels = ['Pedra', 'Papel', 'Tesoiras']
-    agent_move_percentages = [
-        (agent_moves_counter[GameAction.Rock] / total_games) * 100,
-        (agent_moves_counter[GameAction.Paper] / total_games) * 100,
-        (agent_moves_counter[GameAction.Scissors] / total_games) * 100
-    ]
-    plt.pie(agent_move_percentages, labels=agent_move_labels, autopct='%1.1f%%', startangle=90, colors=["#F08C00", "#F0D100", "#12B886"])
+    agent_move_labels = [TRANSLATIONS[action.name] for action in game_actions]
+    agent_move_percentages = [(agent_moves_counter[action] / total_games) * 100 for action in game_actions]
+    
+    if game_choice == 0:
+        colors = ["#F08C00", "#F0D100", "#12B886"]
+    elif game_choice == 1:
+        colors = ["#F08C00", "#F0D100", "#12B886", "#A9E6A9", "#7F6AEB"]
+
+    plt.pie(agent_move_percentages, labels=agent_move_labels, autopct='%1.1f%%', startangle=90, colors=colors)
     plt.title("Distribución de movementos do Axente", fontsize=14, fontweight="bold", color="#C2255C")
     plt.axis('equal')
     plt.tight_layout()
