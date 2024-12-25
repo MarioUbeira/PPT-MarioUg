@@ -14,23 +14,20 @@ def main():
     super_predictin = PredictAgentRPSLS()
     user = get_user()
     game_mode = get_game_choice()
-    if game_mode == 0:
-        predictin.create_csv(user)
-    else:
-        super_predictin.create_csv(user)
-    result = 0
+    if game_mode is None:
+        print(Fore.YELLOW + "Sesión rematada. Grazas por xogar!")
+        return
     
-    if game_mode == 0:
-        agent = predictin
-    elif game_mode == 1:
-        agent = super_predictin 
+    predictin.create_csv(user) if game_mode == 0 else super_predictin.create_csv(user)   
+    result = 0
+    agent = predictin if game_mode == 0 else super_predictin
     
     while True:
         try:
             os.system('cls' if os.name == 'nt' else 'clear')
             user_action = get_user_action(game_mode)
             if user_action is None:
-                print(Fore.YELLOW + f"Partida rematada, grazas por xogar.")
+                print(Fore.YELLOW + f"Partida rematada. Grazas por xogar!")
                 postgame_stats(user, game_mode)
                 break
 

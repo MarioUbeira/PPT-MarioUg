@@ -26,9 +26,30 @@ def get_user():
 def get_game_choice():
     while True:
         try:
-            game_choice = int(input(Fore.MAGENTA + f"Escolle o xogo: RPS[0], RPSLS[1], Saír[9]: {Fore.RESET} "))
+            game_choice = int(input(Fore.MAGENTA + f"Escolle o modo de xogo: RPS[0], RPSLS[1], Axuda[8], Saír[9]: {Fore.RESET}"))
             if game_choice == 0 or game_choice == 1:
                 return game_choice
+            elif game_choice == 8:
+                print(f"""
+                {Fore.YELLOW}ESCOLLE O MODO DE XOGO:{Fore.RESET}
+                
+                - {Fore.CYAN}RPS{Fore.RESET} (clásico): Inclúe só Pedra, Papel e Tesoiras.
+                - {Fore.MAGENTA}RPSLS{Fore.RESET} (ampliación): Engade Lagarto e Spock ás opcións.
+                
+                {Fore.YELLOW}REGRAS BÁSICAS DE RPS E RPSLS:{Fore.RESET}
+
+                - {Fore.CYAN}RPS{Fore.RESET} (Pedra, Papel, Tesoiras):
+                1. {Fore.GREEN}Pedra{Fore.RESET} vence a {Fore.RED}Tesoiras{Fore.RESET}.
+                2. {Fore.GREEN}Papel{Fore.RESET} vence a {Fore.RED}Pedra{Fore.RESET}.
+                3. {Fore.GREEN}Tesoiras{Fore.RESET} vence a {Fore.RED}Papel{Fore.RESET}.
+
+                - {Fore.MAGENTA}RPSLS{Fore.RESET} (Pedra, Papel, Tesoiras, Lagarto, Spock):
+                1. {Fore.GREEN}Pedra{Fore.RESET} vence a {Fore.RED}Tesoiras{Fore.RESET} e {Fore.RED}Lagarto{Fore.RESET}.
+                2. {Fore.GREEN}Papel{Fore.RESET} vence a {Fore.RED}Pedra{Fore.RESET} e {Fore.RED}Spock{Fore.RESET}.
+                3. {Fore.GREEN}Tesoiras{Fore.RESET} vence a {Fore.RED}Papel{Fore.RESET} e {Fore.RED}Lagarto{Fore.RESET}.
+                4. {Fore.GREEN}Lagarto{Fore.RESET} vence a {Fore.RED}Spock{Fore.RESET} e {Fore.RED}Papel{Fore.RESET}.
+                5. {Fore.GREEN}Spock{Fore.RESET} vence a {Fore.RED}Tesoiras{Fore.RESET} e {Fore.RED}Pedra{Fore.RESET}.
+                """)       
             elif game_choice == 9:
                 return None
             else:
