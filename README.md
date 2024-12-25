@@ -56,6 +56,23 @@ En resumo, este axente aprende dos erros e acertos previos e utiliza esa memoria
 
 ## 3. Ampliación: RPSLS
 
+Versión ampliada RPSLS (Pedra, Papel, Tesoiras, Lagarto, Spock) implementada no xogo. Neste modo introdúcense dúas novas accións: Lagarto e Spock, coas seguintes regras adicionais:
+
+**Pedra** ⮞ Gaña contra Tesoiras e Lagarto pero perde contra Papel e Spock.
+
+**Papel** ⮞ Gaña contra Pedra e Spock pero perde contra Tesoiras e Lagarto.
+
+**Tesoiras** ⮞ Gaña contra Papel e Lagarto pero perde contra Pedra e Spock.
+
+**Lagarto** ⮞ Gaña contra Spock e Papel pero perde contra Tesoiras e Pedra.
+
+**Spock** ⮞ Gaña contra Tesoiras e Pedra pero perde contra Papel e Lagarto.
+
+Para xogar no modo RPSLS, debes seleccionalo ao comezo do programa mediante a terminal, cando apareza a seguinte mensaxe:
+``` bash
+Escolle o modo de xogo: RPS[0], RPSLS[1], Axuda[8], Saír[9]: 1
+```
+
 ## 4. Conclusións
 
 ## 5. Instalación e uso
