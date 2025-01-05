@@ -75,6 +75,31 @@ Escolle o modo de xogo: RPS[0], RPSLS[1], Axuda[8], Saír[9]: 1
 
 ## 4. Conclusións
 
+### 4.1 RPS
+
+No modo RPS, tras probar distintas estratexias, deime conta de que é un xogo moi simple e fácil de predicir. Ao poder visualizar o historial de partidas na terminal, o usuario sería sempre capaz de determinar a lóxica de movementos que segue o axente e adaptarse a ela. Isto evidénciase na imaxe, onde o meu irmán, tras comezar perdendo contra o axente, foi capaz de intuír os seus movementos e vencelo despois de tan só catro roldas:
+
+![](./img/Rendemento_con_historial.png)
+
+Con esta observación dínme conta de que, co historial visible, a mellor opción para o axente sería actuar de maneira aleatoria ou utilizando patróns mínimos indetectables, polo que decidín que o mellor sería borrar a terminal despois de cada partida.
+
+Sen o historial de partidas, optei por un método que combina tres estratexias diferentes cun compoñente de aleatoriedade entre elas: 
+- Un 45% das veces o axente intenta predir o seguinte movemento baseándose nunha matriz de Markov simple.
+- Outro 45% actúa segundo a porcentaxe de uso de cada movemento do usuario.
+- O 10% restante elixe un movemento de forma completamente aleatoria.
+
+Ademais, engadín un comprobante para que, se se detecta algún patrón simple no últimos tres movementos do usuario, o axente actúe en consecuencia. Isto implementouse co fin de que o axente fose o máis impredicible posible.
+
+En conclusión, para que o meu axente lograse boas porcentaxes de vitoria sen ser facilmente explotable, tiven que achegar o seu razoamento á aleatoriedade. Dado que sendo tan sinxelo o xogo, resulta moi fácil detectar patróns. Así como o axente está programado para detectar e explotar patróns, o usuario tamén pode contraatacar explotando os do axente. Por tanto, considero que o máis efectivo é dotar ao axente dunha pseudoaleatoriedade que lle permita predicir os movementos do usuario sen ser vulnerable a ser explotado.
+
+### 4.1 RPSLS
+
+O modo RPSLS engade máis variantes ao xogo, o que o fai moito máis difícil de predicir en comparación co modo RPS estándar. A inclusión de dous movementos adicionais, Lagarto e Spock, incrementa a complexidade do xogo e reduce a posibilidade de detectar patróns simples nas decisións do opoñente.
+
+Este aumento da complexidade fai que teña máis sentido dotar ao axente dunha intelixencia máis avanzada. Neste modo, o uso de estratexias como a predición baseada en matrices de Markov e a análise probabilístico dos movementos do adversario vólvese máis relevante. A maior variedade de combinacións posibles permite que o axente poida adaptarse mellor e optimizar as súas decisións, maximizando así as súas probabilidades de vitoria.
+
+En resumo, no RPSLS si que lle outorgo un maior valor a que o axente posúa unha intelixencia capaz de non só reaccionar a patróns máis complexos, senón tamén de anticiparse a movementos menos obvios, facendo que sexa máis impredicible e efectivo neste modo máis amplio.
+
 ## 5. Instalación e uso
 
 **1.** Creamos un cartafol para o repositorio e ubicámonos nel:
