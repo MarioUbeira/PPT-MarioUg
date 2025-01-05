@@ -73,9 +73,21 @@ Para xogar no modo RPSLS, debes seleccionalo ao comezo do programa mediante a te
 Escolle o modo de xogo: RPS[0], RPSLS[1], Axuda[8], Saír[9]: 1
 ```
 
-## 4. Conclusións
+## 4. Estratexia do axente
 
-### 4.1 RPS
+Para cada partida, o axente solicita o nome do usuario, o que lle permite almacenar a información de cada xogador de maneira independente. Deste xeito, o axente pode adaptarse mellor ao estilo de xogo de cada usuario sen verse influído por partidas contra outros xogadores con maneiras diferentes de xogar.
+
+Ao comezar a partida, o axente realiza un movemento aleatorio. Tras isto, se detecta algún patrón simple nos últimos tres movementos do usuario, actúa en consecuencia para contrarrestalo. No caso de non identificar ningún patrón, segue a súa estratexia global, que se distribúe do seguinte xeito:
+
+- O **45%** das veces, intenta predicir o seguinte movemento do usuario baseándose nunha matriz de Markov simple.
+- Outro **45%** das veces, actúa segundo a porcentaxe de uso de cada movemento do usuario, adaptándose á súa tendencia xeral.
+- O **10%** restante elixe un movemento de forma completamente aleatoria.
+
+Esta combinación de estratexias ten como obxectivo facer que o axente sexa o máis impredecible posible, dificultando así que o usuario poida explotalo facilmente.
+
+## 5. Conclusións
+
+### 5.1 RPS
 
 No modo RPS, tras probar distintas estratexias, deime conta de que é un xogo moi simple e fácil de predicir. Ao poder visualizar o historial de partidas na terminal, o usuario sería sempre capaz de determinar a lóxica de movementos que segue o axente e adaptarse a ela. Isto evidénciase na imaxe, onde o meu irmán, tras comezar perdendo contra o axente, foi capaz de intuír os seus movementos e vencelo despois de tan só catro roldas:
 
@@ -83,16 +95,11 @@ No modo RPS, tras probar distintas estratexias, deime conta de que é un xogo mo
 
 Con esta observación dínme conta de que, co historial visible, a mellor opción para o axente sería actuar de maneira aleatoria ou utilizando patróns mínimos indetectables, polo que decidín que o mellor sería borrar a terminal despois de cada partida.
 
-Sen o historial de partidas, optei por un método que combina tres estratexias diferentes cun compoñente de aleatoriedade entre elas: 
-- Un 45% das veces o axente intenta predir o seguinte movemento baseándose nunha matriz de Markov simple.
-- Outro 45% actúa segundo a porcentaxe de uso de cada movemento do usuario.
-- O 10% restante elixe un movemento de forma completamente aleatoria.
-
-Ademais, engadín un comprobante para que, se se detecta algún patrón simple no últimos tres movementos do usuario, o axente actúe en consecuencia. Isto implementouse co fin de que o axente fose o máis impredicible posible.
+Tras eliminar o historial de partidas, optei pola estratexia do axente explicada no apartado: [4. Estratexia do axente](#4-estratexia-do-axente)
 
 En conclusión, para que o meu axente lograse boas porcentaxes de vitoria sen ser facilmente explotable, tiven que achegar o seu razoamento á aleatoriedade. Dado que sendo tan sinxelo o xogo, resulta moi fácil detectar patróns. Así como o axente está programado para detectar e explotar patróns, o usuario tamén pode contraatacar explotando os do axente. Por tanto, considero que o máis efectivo é dotar ao axente dunha pseudoaleatoriedade que lle permita predicir os movementos do usuario sen ser vulnerable a ser explotado.
 
-### 4.1 RPSLS
+### 5.1 RPSLS
 
 O modo RPSLS engade máis variantes ao xogo, o que o fai moito máis difícil de predicir en comparación co modo RPS estándar. A inclusión de dous movementos adicionais, Lagarto e Spock, incrementa a complexidade do xogo e reduce a posibilidade de detectar patróns simples nas decisións do opoñente.
 
@@ -100,7 +107,7 @@ Este aumento da complexidade fai que teña máis sentido dotar ao axente dunha i
 
 En resumo, no RPSLS si que lle outorgo un maior valor a que o axente posúa unha intelixencia capaz de non só reaccionar a patróns máis complexos, senón tamén de anticiparse a movementos menos obvios, facendo que sexa máis impredicible e efectivo neste modo máis amplio.
 
-## 5. Instalación e uso
+## 6. Instalación e uso
 
 **1.** Creamos un cartafol para o repositorio e ubicámonos nel:
 ``` bash
