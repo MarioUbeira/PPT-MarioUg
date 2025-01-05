@@ -75,7 +75,7 @@ Escolle o modo de xogo: RPS[0], RPSLS[1], Axuda[8], Saír[9]: 1
 
 ## 4. Estratexia do axente
 
-Para cada partida, o axente solicita o nome do usuario, o que lle permite almacenar a información de cada xogador de maneira independente. Deste xeito, o axente pode adaptarse mellor ao estilo de xogo de cada usuario sen verse influído por partidas contra outros xogadores con maneiras diferentes de xogar.
+Para cada partida, o axente solicita o nome do usuario, o que lle permite almacenar a información de cada xogador de maneira independente. Ademais, tamén ten en conta o modo de xogo que o usuario escolle, xa que non é o mesmo que o usuario xogue a RPS ou a RPSLS. Deste xeito, o axente pode adaptarse mellor tanto ao estilo de xogo de cada usuario como ás particularidades do modo de xogo, sen verse influído por partidas contra outros xogadores con maneiras diferentes de xogar ou por variacións nas regras do xogo.
 
 Ao comezar a partida, o axente realiza un movemento aleatorio. Tras isto, se detecta algún patrón simple nos últimos tres movementos do usuario, actúa en consecuencia para contrarrestalo. No caso de non identificar ningún patrón, segue a súa estratexia global, que se distribúe do seguinte xeito:
 
